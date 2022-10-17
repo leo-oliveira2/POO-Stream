@@ -76,7 +76,10 @@ public class App {
         }
 
         System.out.println("9. Nome e setor da pessoa mais jovem:");
-
+        lista.stream()
+        .sorted(Comparator.comparing(p->p.getIdade()))
+        .skip(lista.size()-1)
+        .forEach(System.out::println);
 
     }
 }
