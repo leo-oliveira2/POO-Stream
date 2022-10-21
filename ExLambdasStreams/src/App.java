@@ -1,7 +1,6 @@
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class App {
@@ -52,9 +51,12 @@ public class App {
                 .forEach(System.out::println);
 
         System.out.println("5. Idade média dos gerentes:");
-        lista.stream()
+        double idadeMedia = lista.stream()
                 .filter(p->p.getDpto()==Departamento.GERENCIA)
-                .map(p->p.getIdade());
+                .mapToInt(p->p.getIdade())
+                        .average()
+                        .getAsDouble();
+                System.out.println(idadeMedia);
 
         System.out.println("6. Funcionarios ordenados pelo código:");
         lista.stream()
@@ -62,10 +64,10 @@ public class App {
                 .forEach(System.out::println);
 
         System.out.println("7. Funcionários ordenados pela idade+nome:");
-        /*(List<Pessoa> nova = lista.stream()
-                .sorted(Comparator.comparing(Pessoa::getIdade))
-                                    .thenComparing(Pessoa::getNome)                                               
-                .forEach(System.out::println); */
+         lista.stream()
+                .sorted(Comparator.comparing(Pessoa::getIdade)
+                                        .thenComparing(Pessoa::getNome))                                             
+                .forEach(System.out::println); 
 
         System.out.println("8. Criar uma nova lista apenas com os funcionarios do financeiro:");
         List<Pessoa> nova = lista.stream()
@@ -74,12 +76,17 @@ public class App {
         for (Pessoa pessoa : nova) {
             System.out.println(pessoa);
         }
-
+        
         System.out.println("9. Nome e setor da pessoa mais jovem:");
-        lista.stream()
-        .sorted(Comparator.comparing(p->p.getIdade()))
-        .skip(lista.size()-1)
-        .forEach(System.out::println);
+        List<Pessoa> n = lista.stream()
+                .sorted(Comparator.comparing(Pessoa::getIdade))
+                .limit(1)
+                .collect(Collectors.toList());
+        for (Pessoa pessoa : n) {
+                System.out.println(pessoa.getNome()+" "+pessoa.getDpto());
+        }
+
+                
 
     }
 }
